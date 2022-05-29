@@ -93,6 +93,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
+    "https://vongovantien.github.io"
 ]
 
 OAUTH2_PROVIDER = {
