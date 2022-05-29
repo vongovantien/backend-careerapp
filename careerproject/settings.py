@@ -93,7 +93,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
-    "https://vongovantien.github.io"
+    "https://vongovantien.github.io",
+    "https://frontend-careerapp.vercel.app"
 ]
 
 OAUTH2_PROVIDER = {
