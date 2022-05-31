@@ -2,6 +2,7 @@ import random
 import string
 from typing import Union
 
+from rest_framework import serializers
 from django.conf import settings
 from django.db.models import F
 from django.http import Http404
@@ -110,7 +111,7 @@ class ChangePassword(APIView):
         return Response({"success": "false"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class UserViewSet(viewsets.ViewSet, CreateAPIView):
+class UserViewSet(viewsets.ViewSet, CreateAPIView, ListAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
     parser_classes = [MultiPartParser, ]
@@ -178,10 +179,10 @@ class CandidateViewSet(viewsets.ViewSet, RetrieveAPIView, UpdateAPIView):
 
 
 # API dành cho nhà tuyển dụng
-class EmployerViewSet(viewsets.ViewSet, ListAPIView, UpdateAPIView):
+class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
     serializer_class = EmployerSerializer
     pagination_class = EmployerPagination
-    http_method_names = ['get', 'post', 'put']
+    http_method_names = ['get', 'post', 'put', 'delete']
     search_fields = ['name']
     ordering_fields = ['created_date']
     filter_backends = [NameFilterBackend]
@@ -204,23 +205,19 @@ class EmployerViewSet(viewsets.ViewSet, ListAPIView, UpdateAPIView):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
+    @action(methods=['post'], detail=True, url_path="create")
+    def create_employer(self, request):
+        employer = EmployerDetailSerializer(data=request.data)
+        if employer.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+        if employer.is_valid():
+            employer.save()
+            return Response(employer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
     @action(methods=['get'], detail=True, url_path="getByID")
     def get_employer_by_pk(self, request, pk):
-        """
-            This text is the description for this API.
-
-            ---
-            parameters:
-            - name: username
-              description: Foobar long description goes here
-              required: true
-              type: string
-              paramType: form
-            - name: password
-              paramType: form
-              required: true
-              type: string
-        """
         employer = Employer.objects.get(pk=pk)
         return Response(EmployerDetailSerializer(employer, context={"request": request}).data,
                         status=status.HTTP_200_OK)
@@ -290,11 +287,12 @@ class EmployerViewSet(viewsets.ViewSet, ListAPIView, UpdateAPIView):
 
 
 # API post
-class PostViewSet(viewsets.ViewSet, UpdateAPIView,
+class PostViewSet(viewsets.ViewSet, CreateAPIView, UpdateAPIView,
                   RetrieveAPIView, DestroyAPIView):
     serializer_class = PostDetailSerializer
     pagination_class = BasePagination
     queryset = Post.objects.filter(active=True)
+    http_method_names = ['get', 'post', 'put', 'delete']
 
     def get_queryset(self):
         posts = Post.objects.filter(active=True)

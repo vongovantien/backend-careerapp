@@ -19,6 +19,10 @@ class User(AbstractUser):
         choices=USER,
         default=CANDIDATE
     )
+    is_active = models.BooleanField(default=False, null=False)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class ModelBase(models.Model):
@@ -52,22 +56,33 @@ class Candidate(ModelBase):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
 
-class Employer(ModelBase):
+class CandidateSkill(ModelBase):
+    description = models.CharField(max_length=100, unique=True)
+class CandidateBenefit(models.Model):
+
+class Employer(models.Model):
     class Meta:
         unique_together = ('name', 'address')
 
-    location = models.CharField(max_length=100, null=True)
-    address = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100, null=True)
+    location = models.ManyToManyField('Location', related_name="employer", blank=True)
     contact_name = models.CharField(max_length=50)
     contact_email = models.CharField(max_length=50)
     info_employer = RichTextField(null=True)
     logo = models.ImageField("image", blank=True)
     active = models.BooleanField(default=True)
     tags = models.ManyToManyField('Tag', related_name="employer", blank=True)
-    category = models.ForeignKey(Category, related_name="employer", on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey('Category', related_name="employer", on_delete=models.SET_NULL, null=True)
+    active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_date']
+
+
+class Location(models.Model):
+    name = models.CharField(max_length=100)
 
 
 # Model many to one upload nhiều ảnh
@@ -89,12 +104,15 @@ class Post(ModelBase):
     position = models.CharField(max_length=100, null=True)
     location = models.CharField(max_length=100, null=True)
     salary = models.CharField(max_length=100, null=True)
+    salaryMax = models.CharField(max_length=100, null=True)
+    salaryMin = models.CharField(max_length=100, null=True)
     experience = models.CharField(max_length=100, null=True)
     quantity = models.IntegerField(null=True)
     hide_begin = models.DateField(max_length=100, null=True)
     hide_end = models.DateField(max_length=100, null=True)
     description = RichTextField(null=True)
-    benefit = RichTextField(null=True)
+    benefit = models.ManyToManyField('Tag', related_name="post", blank=True)
+    level = models.CharField(max_length=100, null=True)
     requirement = RichTextField(null=True)
     category = models.ForeignKey(Category, related_name="post", on_delete=models.SET_NULL, null=True)
     employers = models.ForeignKey('Employer', related_name="post", on_delete=models.CASCADE)
@@ -152,6 +170,7 @@ class Recruitment(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     candidate = models.ForeignKey(User, on_delete=models.CASCADE)
+    approved_on = models.models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("post", "candidate")
