@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.db.models.functions import ExtractMonth
 from django.template.response import TemplateResponse
 from django.utils.html import mark_safe
-from .models import Employer, Tag, Category, Post, User, EmployerImage, Recruitment, Candidate
+from .models import Employer, Tag, Category, Post, User, EmployerImage, Recruitment, Candidate, Location
 from django.urls import path
 from django.utils.html import format_html
 
@@ -36,9 +36,6 @@ class EmployerAdmin(admin.ModelAdmin):
         }
 
     inlines = (PostInline, EmployerTagInline, EmployerImageInline)
-    list_display = ["id", "name", "location", "created_date", "active"]
-    search_fields = ["name", "created_date", "location"]
-    list_filter = ["name", "created_date", "location"]
     readonly_fields = ["logo_company"]
 
     def logo_company(self, employer):
@@ -47,21 +44,19 @@ class EmployerAdmin(admin.ModelAdmin):
 
 
 class JobAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "salary", "skill", "quantity", "location", "created_date"]
-    search_fields = ["name", "created_date", "salary", "skill"]
-    list_filter = ["name", "created_date", "salary", "skill"]
+    pass
 
 
 class PostAdmin(admin.ModelAdmin):
     title = 'Productive author'
 
     @admin.display(description='Ngày tuyển dụng')
-    def hide_date(self, obj):
-        return obj.hide_begin.strftime('%d-%m-%Y')
-
-    @admin.display(description='Ngày kết thúc')
-    def end_date(self, obj):
-        return obj.hide_end.strftime('%d-%m-%Y')
+    # def hide_date(self, obj):
+    #     return obj.hide_begin.strftime('%d-%m-%Y')
+    #
+    # @admin.display(description='Ngày kết thúc')
+    # def end_date(self, obj):
+    #     return obj.hide_end.strftime('%d-%m-%Y')
 
     @admin.display(description='Vị trí')
     def upper_case_location(self, obj):
@@ -74,24 +69,17 @@ class PostAdmin(admin.ModelAdmin):
             obj.name,
         )
 
-    list_display = ["colored_name", "upper_case_location", "category", "hide_date", "end_date"]
-    search_fields = ["employers", "created_date", "name", "location"]
-    list_filter = ["employers", "name", "location", "category"]
-
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["id", "name"]
-    search_fields = ["name"]
+    pass
 
 
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ["name", "address", "birthday", "active"]
-    search_fields = ["name"]
-    list_filter = ["name"]
+    pass
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ["id", "name"]
+    pass
 
 
 class CareerAppAdminSite(admin.AdminSite):
@@ -186,6 +174,10 @@ class CareerAppAdminSite(admin.AdminSite):
         })
 
 
+class LocationAdmin(admin.ModelAdmin):
+    pass
+
+
 admin_site = CareerAppAdminSite(name="CareerApp")
 
 admin_site.register(Post, PostAdmin)
@@ -203,3 +195,4 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(User),
 admin.site.register(Permission),
 admin.site.register(Candidate, CandidateAdmin),
+admin.site.register(Location, LocationAdmin)
