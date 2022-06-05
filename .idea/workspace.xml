@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09a2f309-3491-4c66-815d-82e9c69cf1d1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/DjangoCareerProject.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/careerapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0002_remove_employer_image_employerimage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0003_remove_comment_post_comment_employer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0004_alter_action_unique_together_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0005_employer_category.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0006_alter_comment_options_post_candidates.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0007_remove_post_candidates_recruitment.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0008_alter_recruitment_unique_together.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0009_alter_recruitment_candidate_alter_recruitment_post.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0010_alter_recruitment_candidate_alter_recruitment_post.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0011_user_phone.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0012_candidate.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0013_rename_bang_cap_candidate_degree.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0014_user_user_role.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0015_alter_user_user_role.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0016_alter_candidate_options_alter_post_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0017_alter_candidate_options_alter_employer_options_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/migrations/0018_alter_employer_logo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/careerapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/careerapp/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/careerproject/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/careerproject/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,13 +27,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "settings.editor.selected.configurable": "editor.preferences.import"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
