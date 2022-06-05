@@ -81,7 +81,10 @@ class Employer(ModelBase):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 # Model many to one upload nhiều ảnh
@@ -104,7 +107,7 @@ class Post(ModelBase):
     approved_at = models.DateField(max_length=100, null=True)
     title_slug = models.CharField(max_length=100, null=True)
     position = models.CharField(max_length=100, null=True)
-    location = models.CharField(max_length=100, null=True)
+    location = location = models.ManyToManyField('Location', related_name="post", blank=True)
     salary = models.CharField(max_length=100, null=True)
     salary_max = models.CharField(max_length=100, null=True)
     salary_min = models.CharField(max_length=100, null=True)

@@ -31,7 +31,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "first_name", "last_name", "email", "username", "avatar", "date_joined"]
+        fields = "__all__"
         extra_kwargs = {
             'password': {'write_only': 'true'}
         }
@@ -114,7 +114,7 @@ class EmployerSerializer(ModelSerializer):
 
     class Meta:
         model = Employer
-        fields = ["id", "name", "logo", "location", "address"]
+        fields = "__all__"
 
 
 # Trả ra chi tiết của một nhà tuyển dụng
@@ -149,7 +149,7 @@ class PostSerializer(ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ["id", "name", "created_date", "location", "salary", "employers", "category"]
+        fields = "__all__"
 
 
 # Hiển thị chi tiết một bài đăng
@@ -166,26 +166,27 @@ class PostDetailSerializer(PostSerializer):
 
     class Meta:
         model = Post
-        fields = PostSerializer.Meta.fields + ["description", "benefit", "requirement", "tags", "experience",
-                                               "category", "quantity", "hide_begin",
-                                               "hide_end", "position"]
+        fields = "__all__"
+        # fields = PostSerializer.Meta.fields + ["description", "benefit", "requirement", "tags", "experience",
+        #                                        "category", "quantity", "hide_begin",
+        #                                        "hide_end", "position"]
 
 
 # Đánh giá một nhà tuyển dụng
 class RatingSerializer(ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['id', 'rate', 'created_date']
+        fields = "__all__"
 
 
 # Xem lượt view của một bài tuyển dụng
 class PostViewSerializer(ModelSerializer):
     class Meta:
         model = PostView
-        exclude = ['created_date', 'updated_date']
+        exclude = "__all__"
 
 
 class ActionSerializer(ModelSerializer):
     class Meta:
         model = Action
-        fields = ['id', 'type', 'created_date']
+        fields = "__all__"

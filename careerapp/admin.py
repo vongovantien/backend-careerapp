@@ -39,8 +39,9 @@ class EmployerAdmin(admin.ModelAdmin):
     readonly_fields = ["logo_company"]
 
     def logo_company(self, employer):
-        return mark_safe("<img src='https://res.cloudinary.com/dgct8zpvp/{img_url}' alt='{alt}' width='120px'/>".
-                         format(img_url=employer.logo.name, alt=employer.name))
+        return mark_safe(
+            "<img src='https://res.cloudinary.com/dgct8zpvp/{img_url}' alt='{alt}' width='120px'/>".
+                format(img_url=employer.logo.name, alt=employer.company_name))
 
 
 class JobAdmin(admin.ModelAdmin):
@@ -175,7 +176,7 @@ class CareerAppAdminSite(admin.AdminSite):
 
 
 class LocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name']
 
 
 admin_site = CareerAppAdminSite(name="CareerApp")

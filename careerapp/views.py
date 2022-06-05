@@ -46,10 +46,7 @@ class NameFilterBackend(BaseFilterBackend):
         ), coreapi.Field(
             "sort",
             location="query",
-        ), coreapi.Field(
-            "perPage",
-            location="query",
-        ),
+        )
         ]
 
     def filter_queryset(self, request, queryset, view):
@@ -133,14 +130,6 @@ class AuthInfo(APIView):
         return Response(settings.OAUTH2_INFO, status=status.HTTP_200_OK)
 
 
-class EmployerPagination(PageNumberPagination):
-    page_size = 10
-
-
-class CommentPagination(PageNumberPagination):
-    page_size = 5
-
-
 class CategoryList(viewsets.ViewSet, ListAPIView):
     serializer_class = CategorySerializer
 
@@ -161,7 +150,7 @@ class CategoryList(viewsets.ViewSet, ListAPIView):
 class CommentViewSet(viewsets.ViewSet, CreateAPIView, UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    pagination_class = CommentPagination
+    pagination_class = BasePagination
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['post', 'put', 'delete']
 
@@ -181,11 +170,15 @@ class CandidateViewSet(viewsets.ViewSet, RetrieveAPIView, UpdateAPIView):
 # API dành cho nhà tuyển dụng
 class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
     serializer_class = EmployerSerializer
-    pagination_class = EmployerPagination
+    pagination_class = BasePagination
     http_method_names = ['get', 'post', 'put', 'delete']
     search_fields = ['name']
     ordering_fields = ['created_date']
     filter_backends = [NameFilterBackend]
+    lookup_field = 'pk'
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
     def get_queryset(self):
         employer = Employer.objects.filter(active=True)
@@ -287,9 +280,11 @@ class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
 
 
 # API post
-class PostViewSet(viewsets.ViewSet, CreateAPIView, UpdateAPIView,
+class PostViewSet(viewsets.ViewSet, ListAPIView, CreateAPIView, UpdateAPIView,
                   RetrieveAPIView, DestroyAPIView):
     serializer_class = PostDetailSerializer
+    ordering_fields = ['created_date']
+    filter_backends = [NameFilterBackend]
     pagination_class = BasePagination
     queryset = Post.objects.filter(active=True)
     http_method_names = ['get', 'post', 'put', 'delete']
