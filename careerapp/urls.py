@@ -13,6 +13,8 @@ router.register('users', views.UserViewSet, basename='user')
 router.register('categories', views.CategoryList, basename="category")
 router.register('candidates', views.CandidateViewSet, basename="candidate")
 router.register('comments', views.CommentViewSet, basename="comment")
+router.register('tags', views.TagViewSet, basename="tag")
+router.register('locations', views.LocationViewSet, basename="location")
 
 schema_view = get_schema_view(
     openapi.Info(

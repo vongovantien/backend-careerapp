@@ -2,22 +2,23 @@ import random
 import string
 from typing import Union
 
-from rest_framework import serializers
+from rest_framework import serializers, generics
 from django.conf import settings
 from django.db.models import F
 from django.http import Http404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.decorators import permission_classes
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, \
-    DestroyAPIView
+# from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, \
+#     DestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from twilio.rest import Client
 
-from .models import Employer, Post, User, Category, Tag, Action, Rating, PostView, Comment, Recruitment, Candidate
+from .models import Employer, Post, User, Category, Tag, Action, Rating, PostView, Comment, Location, Recruitment, \
+    Candidate
 from .paginator import BasePagination
 from .serializers import (
     PostSerializer,
@@ -25,7 +26,9 @@ from .serializers import (
     EmployerDetailSerializer,
     EmployerSerializer,
     UserSerializer,
-    CategorySerializer, ActionSerializer, PostViewSerializer, CommentSerializer, RatingSerializer, CandidateSerializer
+    TagSerializer,
+    CategorySerializer, ActionSerializer, PostViewSerializer, CommentSerializer, RatingSerializer,
+    LocationSerializer, CandidateSerializer
 )
 
 ran_password = ''.join(random.choice(string.ascii_letters) for i in range(8))
@@ -108,7 +111,7 @@ class ChangePassword(APIView):
         return Response({"success": "false"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class UserViewSet(viewsets.ViewSet, CreateAPIView, ListAPIView):
+class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView):
     queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
     parser_classes = [MultiPartParser, ]
@@ -130,7 +133,7 @@ class AuthInfo(APIView):
         return Response(settings.OAUTH2_INFO, status=status.HTTP_200_OK)
 
 
-class CategoryList(viewsets.ViewSet, ListAPIView):
+class CategoryList(viewsets.ViewSet, generics.ListAPIView):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
@@ -147,7 +150,7 @@ class CategoryList(viewsets.ViewSet, ListAPIView):
 
 
 # API comment
-class CommentViewSet(viewsets.ViewSet, CreateAPIView, UpdateAPIView):
+class CommentViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = BasePagination
@@ -162,23 +165,36 @@ class CommentViewSet(viewsets.ViewSet, CreateAPIView, UpdateAPIView):
 
 
 # API trả về một ứng viên
-class CandidateViewSet(viewsets.ViewSet, RetrieveAPIView, UpdateAPIView):
+class CandidateViewSet(viewsets.ViewSet, generics.RetrieveAPIView, generics.UpdateAPIView):
     serializer_class = CandidateSerializer
     queryset = Candidate.objects.all()
 
 
+class TagViewSet(viewsets.ViewSet, generics.ListAPIView):
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+
+
+class LocationViewSet(viewsets.ViewSet, generics.ListAPIView):
+    serializer_class = LocationSerializer
+    queryset = Location.objects.all()
+
+
 # API dành cho nhà tuyển dụng
-class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
+class EmployerViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPIView, generics.ListAPIView,
+                      generics.DestroyAPIView):
+    queryset = Employer.objects.all()
     serializer_class = EmployerSerializer
     pagination_class = BasePagination
     http_method_names = ['get', 'post', 'put', 'delete']
     search_fields = ['name']
     ordering_fields = ['created_date']
     filter_backends = [NameFilterBackend]
-    lookup_field = 'pk'
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+    # lookup_field = 'pk'
+
+    # def delete(self, request, *args, **kwargs):
+    #     return self.destroy(request, *args, **kwargs)
 
     def get_queryset(self):
         employer = Employer.objects.filter(active=True)
@@ -198,22 +214,25 @@ class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
-    @action(methods=['post'], detail=True, url_path="create")
-    def create_employer(self, request):
-        employer = EmployerDetailSerializer(data=request.data)
-        if employer.objects.filter(**request.data).exists():
-            raise serializers.ValidationError('This data already exists')
-        if employer.is_valid():
-            employer.save()
-            return Response(employer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    # @action(methods=['post'], detail=True, url_path="create")
+    # def create_employer(self, request):
+    #     employer = EmployerDetailSerializer(data=request.data)
+    #     if employer.objects.filter(**request.data).exists():
+    #         raise serializers.ValidationError('This data already exists')
+    #     if employer.is_valid():
+    #         employer.save()
+    #         return Response(employer.data)
+    #     else:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=['get'], detail=True, url_path="getByID")
     def get_employer_by_pk(self, request, pk):
         employer = Employer.objects.get(pk=pk)
-        return Response(EmployerDetailSerializer(employer, context={"request": request}).data,
-                        status=status.HTTP_200_OK)
+        try:
+            return Response(EmployerDetailSerializer(employer, context={"request": request}).data,
+                            status=status.HTTP_200_OK)
+        except Http404:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=['post'], detail=True, url_path="add-tags")
     def add_tags(self, request, pk):
@@ -280,8 +299,8 @@ class EmployerViewSet(viewsets.ViewSet, ListAPIView, DestroyAPIView):
 
 
 # API post
-class PostViewSet(viewsets.ViewSet, ListAPIView, CreateAPIView, UpdateAPIView,
-                  RetrieveAPIView, DestroyAPIView):
+class PostViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView, generics.UpdateAPIView,
+                  generics.RetrieveAPIView, generics.DestroyAPIView):
     serializer_class = PostDetailSerializer
     ordering_fields = ['created_date']
     filter_backends = [NameFilterBackend]
