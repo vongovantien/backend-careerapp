@@ -2,7 +2,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from .models import Employer, Post, Tag, User, Category, Action, Rating, PostView, Comment, EmployerImage, Recruitment, \
-    Candidate
+    Candidate, Location
 
 
 # TEST
@@ -67,6 +67,12 @@ class RecruitmentSerializer(ModelSerializer):
 class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
+        fields = "__all__"
+
+
+class LocationSerializer(ModelSerializer):
+    class Meta:
+        model = Location
         fields = "__all__"
 
 

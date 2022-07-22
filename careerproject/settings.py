@@ -158,11 +158,7 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-<<<<<<< HEAD
-        'NAME': 'product',
-=======
         'NAME': 'vtcareerdb',
->>>>>>> 4d3b1440bdea12c0182b54e4bad5249ca8592351
         'USER': 'postgres',
         'PASSWORD': 'meu@sds12@!#gh',
         'HOST': '27.74.255.96',

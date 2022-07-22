@@ -79,6 +79,9 @@ class Employer(ModelBase):
     class Meta:
         ordering = ['-created_date']
 
+    def __str__(self):
+        return self.company_name
+
 
 class Location(models.Model):
     name = models.CharField(max_length=100, unique=True)
